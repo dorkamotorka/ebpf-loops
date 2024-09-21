@@ -4,7 +4,8 @@
 
 char LICENSE[] SEC("license") = "GPL";
 
-#define NUM_LOOPS 100
+// Change this to 1M to reach the instruction set limit
+#define NUM_LOOPS 10000
 
 SEC("xdp")
 int xdp_prog_for_loop_unroll(struct xdp_md *ctx) {
@@ -14,6 +15,7 @@ int xdp_prog_for_loop_unroll(struct xdp_md *ctx) {
     #pragma clang loop unroll(full)
     for (int i = 0; i < NUM_LOOPS; i++) {
         counter++;
+	bpf_printk("Counting...");
     }
 
     bpf_printk("Counted %dx times", counter);
@@ -28,6 +30,7 @@ int xdp_prog_for_loop(struct xdp_md *ctx) {
     // Standard for loop, iterating NUM_LOOPS times
     for (int i = 0; i < NUM_LOOPS; i++) {
         counter++;
+	bpf_printk("Counting...");
     }
 
     bpf_printk("Counted %dx times", counter);
@@ -42,6 +45,7 @@ int xdp_prog_while_loop(struct xdp_md *ctx) {
     // While loop
     while (counter < NUM_LOOPS) {
         counter++;
+	bpf_printk("Counting...");
     }
 
     bpf_printk("Counted %dx times", counter);
@@ -54,6 +58,7 @@ static long (* const bpf_loop)(__u32 nr_loops, void *callback_fn, void *callback
 // Define the callback function for bpf_loop
 static int increment_counter(void *ctx, int *counter) {
     (*counter)++;
+    bpf_printk("Counting...");
     return 0;
 }
 
@@ -112,6 +117,7 @@ int xdp_prog_bpf_for_helper(struct xdp_md *ctx) {
 
     bpf_for(counter, 0, NUM_LOOPS) {
 	counter++;
+	bpf_printk("Counting...");
     }
 
     bpf_printk("Counted %dx times", counter);
@@ -147,6 +153,7 @@ int xdp_prog_bpf_repeat_helper(struct xdp_md *ctx) {
 
     bpf_repeat(NUM_LOOPS) {
 	counter++;
+	bpf_printk("Counting...");
     }
 
     bpf_printk("Counted %dx times", counter);
