@@ -36,8 +36,8 @@ func main() {
 
 	// Attach XDP program to the network interface.
 	xdplink, err := link.AttachXDP(link.XDPOptions{
-			//Program:   objs.XdpProgForLoopUnroll,
-			Program:   objs.XdpProgForLoop,
+			Program:   objs.XdpProgForLoopUnroll,
+			//Program:   objs.XdpProgForLoop,
 			//Program:   objs.XdpProgWhileLoop,
 			//Program:   objs.XdpProgBpfLoopCallback,
 			//Program:   objs.XdpProgBpfForHelper,

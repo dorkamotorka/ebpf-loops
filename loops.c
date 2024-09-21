@@ -4,8 +4,9 @@
 
 char LICENSE[] SEC("license") = "GPL";
 
-// Change this to 1M to reach the instruction set limit
-#define NUM_LOOPS 10000
+#define NUM_LOOPS 10
+
+/* for loop with unroll directive*/
 
 SEC("xdp")
 int xdp_prog_for_loop_unroll(struct xdp_md *ctx) {
@@ -23,6 +24,8 @@ int xdp_prog_for_loop_unroll(struct xdp_md *ctx) {
     return XDP_PASS;
 }
 
+/* bounded for loop */
+
 SEC("xdp")
 int xdp_prog_for_loop(struct xdp_md *ctx) {
     int counter = 0;
@@ -38,6 +41,8 @@ int xdp_prog_for_loop(struct xdp_md *ctx) {
     return XDP_PASS;
 }
 
+/* while loop */
+
 SEC("xdp")
 int xdp_prog_while_loop(struct xdp_md *ctx) {
     int counter = 0;
@@ -52,6 +57,8 @@ int xdp_prog_while_loop(struct xdp_md *ctx) {
 
     return XDP_PASS;
 }
+
+/* -> bpf_loop helper function */
 
 static long (* const bpf_loop)(__u32 nr_loops, void *callback_fn, void *callback_ctx, __u64 flags) = (void *) 181;
 
@@ -74,6 +81,7 @@ int xdp_prog_bpf_loop_callback(struct xdp_md *ctx) {
     return XDP_PASS;
 }
 
+/* -> bpf_for helper function */
 
 extern int bpf_iter_num_new(struct bpf_iter_num *it, int start, int end) __weak __ksym;
 extern int *bpf_iter_num_next(struct bpf_iter_num *it) __weak __ksym;
@@ -125,6 +133,7 @@ int xdp_prog_bpf_for_helper(struct xdp_md *ctx) {
     return XDP_PASS;
 }
 
+/* -> bpf_repeat helper function */
 
 #ifndef bpf_repeat
 /* bpf_repeat(N) performs N iterations without exposing iteration number
