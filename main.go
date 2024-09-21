@@ -39,7 +39,9 @@ func main() {
 			//Program:   objs.XdpProg,
 			//Program:   objs.XdpProgForLoop,
 			//Program:   objs.XdpProgForLoopUnroll,
-			Program:   objs.XdpProgBpfLoopCallback,
+			//Program:   objs.XdpProgBpfLoopCallback,
+			//Program:   objs.XdpProgBpfForHelper,
+			Program:   objs.XdpProgBpfRepeatHelper,
 			Interface: iface.Index,
 	})
 	if err != nil {
