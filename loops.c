@@ -7,20 +7,6 @@ char LICENSE[] SEC("license") = "GPL";
 #define NUM_LOOPS 100
 
 SEC("xdp")
-int xdp_prog(struct xdp_md *ctx) {
-    int counter = 0;
-
-    // While loop
-    while (counter < NUM_LOOPS) {
-        counter++;
-    }
-
-    bpf_printk("Counted %dx times", counter);
-
-    return XDP_PASS;
-}
-
-SEC("xdp")
 int xdp_prog_for_loop_unroll(struct xdp_md *ctx) {
     int counter = 0;
 
@@ -41,6 +27,20 @@ int xdp_prog_for_loop(struct xdp_md *ctx) {
 
     // Standard for loop, iterating NUM_LOOPS times
     for (int i = 0; i < NUM_LOOPS; i++) {
+        counter++;
+    }
+
+    bpf_printk("Counted %dx times", counter);
+
+    return XDP_PASS;
+}
+
+SEC("xdp")
+int xdp_prog_while_loop(struct xdp_md *ctx) {
+    int counter = 0;
+
+    // While loop
+    while (counter < NUM_LOOPS) {
         counter++;
     }
 
