@@ -14,6 +14,8 @@ So which one should you use?
 
 ## How to Run
 
+https://github.com/user-attachments/assets/340bcd57-d995-497f-aecc-fc4d23b83722
+
 **NOTE**: In other to be able to run this, at minimum kernel `6.4` version is needed, since this is when Numeric open coded iterators were introduced.
 
 First build and run the eBPF program:
