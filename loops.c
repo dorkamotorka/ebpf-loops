@@ -4,7 +4,7 @@
 
 char LICENSE[] SEC("license") = "GPL";
 
-#define NUM_LOOPS 10
+#define NUM_LOOPS 100
 
 /* for loop with unroll directive*/
 

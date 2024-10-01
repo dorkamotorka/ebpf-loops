@@ -29,6 +29,20 @@ func main() {
 	}
 	defer objs.Close()
 
+	/*
+	// This way you can print number of eBPF instructions
+	// Check also: https://github.com/cilium/cilium/blob/main/test/verifier/verifier_test.go#L214-L265
+	info, err := objs.XdpProgForLoopUnroll.Info()
+	if err != nil {
+		log.Fatalf("Failed to get eBPF Program info: %s", err)
+	}
+	insn, err := info.Instructions()
+	if err != nil {
+		log.Fatalf("Failed to get Instructions: %s", err)
+	}
+	log.Printf("Number of instructions in the eBPF Program: %d", len(insn))
+	*/
+
 	iface, err := net.InterfaceByName(ifname)
 	if err != nil {
 		log.Fatalf("Getting interface %s: %s", ifname, err)
