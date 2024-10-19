@@ -3,9 +3,9 @@ package main
 //go:generate go run github.com/cilium/ebpf/cmd/bpf2go loops loops.c
 
 import (
+	"flag"
 	"log"
 	"net"
-	"flag"
 	"time"
 
 	"github.com/cilium/ebpf/link"
@@ -30,17 +30,17 @@ func main() {
 	defer objs.Close()
 
 	/*
-	// This way you can print number of eBPF instructions
-	// Check also: https://github.com/cilium/cilium/blob/main/test/verifier/verifier_test.go#L214-L265
-	info, err := objs.XdpProgForLoopUnroll.Info()
-	if err != nil {
-		log.Fatalf("Failed to get eBPF Program info: %s", err)
-	}
-	insn, err := info.Instructions()
-	if err != nil {
-		log.Fatalf("Failed to get Instructions: %s", err)
-	}
-	log.Printf("Number of instructions in the eBPF Program: %d", len(insn))
+		// This way you can print number of eBPF instructions
+		// Check also: https://github.com/cilium/cilium/blob/main/test/verifier/verifier_test.go#L214-L265
+		info, err := objs.XdpProgForLoopUnroll.Info()
+		if err != nil {
+			log.Fatalf("Failed to get eBPF Program info: %s", err)
+		}
+		insn, err := info.Instructions()
+		if err != nil {
+			log.Fatalf("Failed to get Instructions: %s", err)
+		}
+		log.Printf("Number of instructions in the eBPF Program: %d", len(insn))
 	*/
 
 	iface, err := net.InterfaceByName(ifname)
@@ -50,18 +50,20 @@ func main() {
 
 	// Attach XDP program to the network interface.
 	xdplink, err := link.AttachXDP(link.XDPOptions{
-			Program:   objs.XdpProgForLoopUnroll,
-			//Program:   objs.XdpProgForLoop,
-			//Program:   objs.XdpProgWhileLoop,
-			//Program:   objs.XdpProgBpfLoopCallback,
-			//Program:   objs.XdpProgBpfForHelper,
-			//Program:   objs.XdpProgBpfRepeatHelper,
-			Interface: iface.Index,
+		Program: objs.XdpProgForLoopUnroll,
+		//Program:   objs.XdpProgForLoop,
+		//Program:   objs.XdpProgWhileLoop,
+		//Program:   objs.XdpProgBpfLoopCallback,
+		//Program:   objs.XdpProgBpfForHelper,
+		//Program:   objs.XdpProgBpfRepeatHelper,
+		Interface: iface.Index,
 	})
 	if err != nil {
 		log.Fatal("Attaching XDP:", err)
 	}
 	defer xdplink.Close()
 
-	for { time.Sleep(time.Second * 1) }
+	for {
+		time.Sleep(time.Second * 1)
+	}
 }
