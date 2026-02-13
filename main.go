@@ -28,7 +28,7 @@ func main() {
 
 	/*
 	// This way you can print number of eBPF instructions
-	// Check also: https://github.com/cilium/cilium/blob/main/test/verifier/verifier_test.go#L214-L265
+	// NOTE: Change the eBPF program (objs.*.Info()) at your will
 	info, err := objs.LoopUnroll.Info()
 	if err != nil {
 		log.Fatalf("Failed to get eBPF Program info: %s", err)
@@ -41,11 +41,12 @@ func main() {
 	*/
 
 	// Attach Tracepoint
+	// NOTE: Change the attached eBPF program at your will
 	tp, err := link.Tracepoint(
 		"syscalls", 
 		"sys_enter_execve", 
-		//objs.LoopUnroll,
-		objs.BoundedLoop, 
+		objs.LoopUnroll,
+		//objs.BoundedLoop, 
  		//objs.WhileLoop,
 		//objs.BpfForHelper,
 		//objs.BpfLoopCallback,
