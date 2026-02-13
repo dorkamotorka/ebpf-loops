@@ -29,7 +29,7 @@ func main() {
 	/*
 	// This way you can print number of eBPF instructions
 	// Check also: https://github.com/cilium/cilium/blob/main/test/verifier/verifier_test.go#L214-L265
-	info, err := objs.XdpProgForLoopUnroll.Info()
+	info, err := objs.LoopUnroll.Info()
 	if err != nil {
 		log.Fatalf("Failed to get eBPF Program info: %s", err)
 	}
@@ -44,12 +44,12 @@ func main() {
 	tp, err := link.Tracepoint(
 		"syscalls", 
 		"sys_enter_execve", 
-		//LoopUnroll,
+		//objs.LoopUnroll,
 		objs.BoundedLoop, 
- 		//WhileLoop,
+ 		//objs.WhileLoop,
 		//objs.BpfForHelper,
 		//objs.BpfLoopCallback,
-		//BpfRepeatHelper,
+		//objs.BpfRepeatHelper,
 		nil,
 	)
 	if err != nil {
