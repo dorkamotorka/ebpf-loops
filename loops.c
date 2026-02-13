@@ -29,8 +29,8 @@ int bounded_loop(struct trace_event_raw_sys_enter *ctx) {
 
     // Standard for loop, iterating NUM_LOOPS times
     for (int i = 0; i < NUM_LOOPS; i++) {
-	counter++;
-	bpf_printk("Counting in bounded_loop...");
+		counter++;
+		bpf_printk("Counting in bounded_loop...");
     }
 
     bpf_printk("Counted %dx times", counter);
