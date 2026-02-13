@@ -44,13 +44,13 @@ func main() {
 	tp, err := link.Tracepoint(
 		"syscalls", 
 		"sys_enter_execve", 
+		//LoopUnroll,
 		objs.BoundedLoop, 
+ 		//WhileLoop,
 		//objs.BpfForHelper,
 		//objs.BpfLoopCallback,
 		//BpfRepeatHelper,
-		//LoopUnroll,
- 		//WhileLoop,
-		nil
+		nil,
 	)
 	if err != nil {
 		log.Fatalf("Attaching Tracepoint: %s", err)

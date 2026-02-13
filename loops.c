@@ -114,7 +114,7 @@ int bpf_for_helper(struct trace_event_raw_sys_enter *ctx) {
     // Use bpf_for helper
     bpf_for(counter, 0, NUM_LOOPS) {
     	counter++;
-    	bpf_printk("Counting...");
+    	bpf_printk("Counting in bpf_for helper...");
     }
 
     bpf_printk("Counted %dx times", counter);
