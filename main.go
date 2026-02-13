@@ -27,27 +27,27 @@ func main() {
 	defer objs.Close()
 
 	/*
-	// This way you can print number of eBPF instructions
-	// NOTE: Change the eBPF program (objs.*.Info()) at your will
-	info, err := objs.LoopUnroll.Info()
-	if err != nil {
-		log.Fatalf("Failed to get eBPF Program info: %s", err)
-	}
-	insn, err := info.Instructions()
-	if err != nil {
-		log.Fatalf("Failed to get Instructions: %s", err)
-	}
-	log.Printf("Number of instructions in the eBPF Program: %d", len(insn))
+		// This way you can print number of eBPF instructions
+		// NOTE: Change the eBPF program (objs.*.Info()) at your will
+		info, err := objs.LoopUnroll.Info()
+		if err != nil {
+			log.Fatalf("Failed to get eBPF Program info: %s", err)
+		}
+		insn, err := info.Instructions()
+		if err != nil {
+			log.Fatalf("Failed to get Instructions: %s", err)
+		}
+		log.Printf("Number of instructions in the eBPF Program: %d", len(insn))
 	*/
 
 	// Attach Tracepoint
 	// NOTE: Change the attached eBPF program at your will
 	tp, err := link.Tracepoint(
-		"syscalls", 
-		"sys_enter_execve", 
+		"syscalls",
+		"sys_enter_execve",
 		objs.LoopUnroll,
-		//objs.BoundedLoop, 
- 		//objs.WhileLoop,
+		//objs.BoundedLoop,
+		//objs.WhileLoop,
 		//objs.BpfForHelper,
 		//objs.BpfLoopCallback,
 		//objs.BpfRepeatHelper,
