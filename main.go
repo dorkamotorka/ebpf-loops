@@ -1,6 +1,6 @@
 package main
 
-//go:generate go run github.com/cilium/ebpf/cmd/bpf2go loops loops.c
+//go:generate go run github.com/cilium/ebpf/cmd/bpf2go -target bpf loops loops.c
 
 import (
 	"context"
@@ -41,7 +41,17 @@ func main() {
 	*/
 
 	// Attach Tracepoint
-	tp, err := link.Tracepoint("syscalls", "sys_enter_execve", objs.BoundedLoop, nil)
+	tp, err := link.Tracepoint(
+		"syscalls", 
+		"sys_enter_execve", 
+		objs.BoundedLoop, 
+		//objs.BpfForHelper,
+		//objs.BpfLoopCallback,
+		//BpfRepeatHelper,
+		//LoopUnroll,
+ 		//WhileLoop,
+		nil
+	)
 	if err != nil {
 		log.Fatalf("Attaching Tracepoint: %s", err)
 	}
