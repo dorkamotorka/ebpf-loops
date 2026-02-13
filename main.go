@@ -3,10 +3,11 @@ package main
 //go:generate go run github.com/cilium/ebpf/cmd/bpf2go loops loops.c
 
 import (
-	"flag"
+	"context"
 	"log"
-	"net"
-	"time"
+	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/cilium/ebpf/link"
 	"github.com/cilium/ebpf/rlimit"
@@ -17,10 +18,6 @@ func main() {
 	if err := rlimit.RemoveMemlock(); err != nil {
 		log.Fatal("Removing memlock:", err)
 	}
-
-	var ifname string
-	flag.StringVar(&ifname, "i", "enp5s0", "Network interface name where the eBPF program will be attached")
-	flag.Parse()
 
 	// Load the compiled eBPF ELF and load it into the kernel.
 	var objs loopsObjects
@@ -36,36 +33,25 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to get eBPF Program info: %s", err)
 	}
-	
 	insn, err := info.Instructions()
 	if err != nil {
 		log.Fatalf("Failed to get Instructions: %s", err)
 	}
-	
 	log.Printf("Number of instructions in the eBPF Program: %d", len(insn))
 	*/
 
-	iface, err := net.InterfaceByName(ifname)
+	// Attach Tracepoint
+	tp, err := link.Tracepoint("syscalls", "sys_enter_execve", objs.BoundedLoop, nil)
 	if err != nil {
-		log.Fatalf("Getting interface %s: %s", ifname, err)
+		log.Fatalf("Attaching Tracepoint: %s", err)
 	}
+	defer tp.Close()
+	log.Printf("Successfully attached eBPF Tracepoint...")
 
-	// Attach XDP program to the network interface.
-	xdplink, err := link.AttachXDP(link.XDPOptions{
-		Program: objs.XdpProgForLoopUnroll,
-		//Program:   objs.XdpProgForLoop,
-		//Program:   objs.XdpProgWhileLoop,
-		//Program:   objs.XdpProgBpfLoopCallback,
-		//Program:   objs.XdpProgBpfForHelper,
-		//Program:   objs.XdpProgBpfRepeatHelper,
-		Interface: iface.Index,
-	})
-	if err != nil {
-		log.Fatal("Attaching XDP:", err)
-	}
-	defer xdplink.Close()
+	// Wait for SIGINT/SIGTERM (Ctrl+C) before exiting
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
 
-	for {
-		time.Sleep(time.Second * 1)
-	}
+	<-ctx.Done()
+	log.Println("Received signal, exiting...")
 }
